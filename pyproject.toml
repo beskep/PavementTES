@@ -1,0 +1,39 @@
+[project]
+name = 'PavementTES'
+version = '0.1.0'
+description = '도로 집열면적에 따른 계절간 축열량 및 축열조 용량 산정 프로그램'
+requires-python = '>=3.11'
+
+[tool.ruff]
+preview = true
+select = ['ALL']
+ignore = [
+    'ANN',
+    'COM',
+    'CPY',
+    'D',
+    'E1',
+    'E2',
+    'FIX',
+    'INP',
+    'ISC001',
+    'PD010',
+    'PD901',
+    'PTH123',
+    'Q',
+    'S101',
+    'T20',
+    'TD',
+]
+ignore-init-module-imports = true
+unfixable = ['ERA']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.mypy]
+disable_error_code = ['var-annotated', 'import']
+check_untyped_defs = true
+warn_unused_ignores = true
+warn_unused_configs = true
