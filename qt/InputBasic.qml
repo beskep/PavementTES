@@ -9,14 +9,14 @@ Pane {
             "water": {
                 "cp": parseFloat(cp_water.text),
                 "rho": parseFloat(rho_water.text),
-                "porosity": parseFloat(porosity_water.text),
-                "efficiency": parseFloat(efficiency_water.text) / 100
+                "porosity": 0,
+                "efficiency": parseFloat(efficiency.text) / 100
             },
             "sand": {
                 "cp": parseFloat(cp_sand.text),
                 "rho": parseFloat(rho_sand.text),
                 "porosity": parseFloat(porosity_sand.text),
-                "efficiency": parseFloat(efficiency_sand.text) / 100
+                "efficiency": parseFloat(efficiency.text) / 100
             },
             "environment": {
                 "delta_temperature": parseFloat(delta_temperature.text),
@@ -35,8 +35,7 @@ Pane {
         rho_sand.save();
         porosity_water.save();
         porosity_sand.save();
-        efficiency_water.save();
-        efficiency_sand.save();
+        efficiency.save();
         delta_temperature.save();
         daily_radiation.save();
     }
@@ -64,10 +63,8 @@ Pane {
                     cp_sand.text = 0.9;
                     rho_water.text = 1000;
                     rho_sand.text = 2000;
-                    porosity_water.text = 0.5;
                     porosity_sand.text = 0.5;
-                    efficiency_water.text = 50;
-                    efficiency_sand.text = 50;
+                    efficiency.text = 50;
                     delta_temperature.text = 30;
                     daily_radiation.text = 4.3;
                     save_buttons();
@@ -85,11 +82,12 @@ Pane {
                 title: '물성치'
 
                 GridLayout {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     Layout.margins: 20
                     columns: 4
                     columnSpacing: 20
+                    rowSpacing: 10
 
                     Rectangle {
                     }
@@ -115,6 +113,7 @@ Pane {
                     TextFieldStatus {
                         id: cp_water
 
+                        Layout.fillWidth: true
                         text: '4.2'
 
                         validator: DoubleValidator {
@@ -125,6 +124,7 @@ Pane {
                     TextFieldStatus {
                         id: cp_sand
 
+                        Layout.fillWidth: true
                         text: '0.9'
 
                         validator: DoubleValidator {
@@ -144,6 +144,7 @@ Pane {
                     TextFieldStatus {
                         id: rho_water
 
+                        Layout.fillWidth: true
                         text: '1000'
 
                         validator: DoubleValidator {
@@ -154,6 +155,7 @@ Pane {
                     TextFieldStatus {
                         id: rho_sand
 
+                        Layout.fillWidth: true
                         text: '2000'
 
                         validator: DoubleValidator {
@@ -173,17 +175,16 @@ Pane {
                     TextFieldStatus {
                         id: porosity_water
 
-                        // FIXME 물만 있을 땐 공극률 적용 안됨
-                        text: '0.5'
-
-                        validator: DoubleValidator {
-                        }
-
+                        Layout.fillWidth: true
+                        enabled: false
+                        horizontalAlignment: TextInput.AlignHCenter
+                        text: '-'
                     }
 
                     TextFieldStatus {
                         id: porosity_sand
 
+                        Layout.fillWidth: true
                         text: '0.5'
 
                         validator: DoubleValidator {
@@ -201,18 +202,10 @@ Pane {
                     }
 
                     TextFieldStatus {
-                        id: efficiency_water
+                        id: efficiency
 
-                        text: '50'
-
-                        validator: DoubleValidator {
-                        }
-
-                    }
-
-                    TextFieldStatus {
-                        id: efficiency_sand
-
+                        Layout.columnSpan: 2
+                        Layout.fillWidth: true
                         text: '50'
 
                         validator: DoubleValidator {
@@ -239,11 +232,12 @@ Pane {
                 title: '환경변수'
 
                 GridLayout {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
+                    anchors.left: parent.left
+                    anchors.right: parent.right
                     Layout.margins: 20
-                    columns: 3
+                    columns: 4
                     columnSpacing: 20
+                    rowSpacing: 10
 
                     // 온도차
                     Label {
@@ -253,6 +247,7 @@ Pane {
                     TextFieldStatus {
                         id: delta_temperature
 
+                        Layout.preferredWidth: 200
                         text: '30'
 
                         validator: DoubleValidator {
@@ -264,6 +259,10 @@ Pane {
                         text: '℃'
                     }
 
+                    Rectangle {
+                        Layout.fillWidth: true
+                    }
+
                     // 일간평균일사량
                     Label {
                         text: '일간평균일사량'
@@ -272,6 +271,7 @@ Pane {
                     TextFieldStatus {
                         id: daily_radiation
 
+                        Layout.preferredWidth: 200
                         text: '4.3'
 
                         validator: DoubleValidator {

@@ -90,7 +90,7 @@ Pane {
                 anchors.top: parent.top
                 syncView: table_view
                 clip: true
-                model: ['집열 효율 (%)', '집열 기간 (일)', '도로 면적 (m²)', '축열재', '축열량 (kJ)', '축열조 용량 (m³)']
+                model: ['집열 효율', '집열 기간 (일)', '도로 면적 (m²)', '축열재', '축열량 (kJ)', '축열조 용량 (m³)']
             }
 
             VerticalHeaderView {

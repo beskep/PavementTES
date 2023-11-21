@@ -13,7 +13,6 @@ TextField {
 
     }
 
-    Layout.preferredWidth: 175
     Component.onCompleted: {
         original_foreground = Material.foreground;
     }

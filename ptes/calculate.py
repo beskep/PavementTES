@@ -1,12 +1,15 @@
+import math
 from typing import ClassVar, Literal
 
+from loguru import logger
 from pydantic import BaseModel, Field, field_serializer
 
 positive = Field(gt=0.0)
-ratio = Field(gt=0.0, le=1.0)
+ratio = Field(ge=0.0, le=1.0)
 
 
 class Material(BaseModel):
+    # XXX efficiency를 환경 변수로?
     cp: float = positive  # kJ/kg℃
     rho: float = positive  # kg/m³
     porosity: float = ratio
@@ -52,7 +55,7 @@ class Capacity(Design):
     )
     @staticmethod
     def _serialize_numeric(value):
-        return f'{value:.4g}'
+        return f'{value:g}'
 
 
 class DesignCases(BaseModel):
@@ -80,15 +83,9 @@ class CapacityCases(BaseModel):
     )
 
 
-def _weighted(m1: Material, m2: Material, field: str) -> float:
-    d1 = m1.model_dump()
-    d2 = m2.model_dump()
-    return d1[field] * m1.porosity + d2[field] * m2.porosity
-
-
 class PavementTES:
     def __init__(self) -> None:
-        self._water = Material(cp=4.2, rho=1000, porosity=0.5, efficiency=0.5)
+        self._water = Material(cp=4.2, rho=1000, porosity=0.0, efficiency=0.5)
         self._sand = Material(cp=0.9, rho=2000, porosity=0.5, efficiency=0.5)
         self._env = Environment(delta_temperature=30.0, daily_radiation=4.3)
 
@@ -124,6 +121,11 @@ class PavementTES:
 
     def calculate(self, data: dict[str, float | int] | Design):
         design = data if isinstance(data, Design) else Design.model_validate(data)
+        if not math.isclose(self._water.efficiency, self._sand.efficiency):
+            logger.warning(
+                '물과 모래의 열저장효율이 다릅니다. '
+                '계산에는 모래의 열저장효율이 적용됩니다.'
+            )
 
         match design.material:
             case 0:
@@ -135,9 +137,9 @@ class PavementTES:
                 rho = self._sand.rho * self._sand.porosity
                 efficiency = self._sand.efficiency
             case 2:
-                cp = _weighted(self._water, self._sand, 'cp')
-                rho = _weighted(self._water, self._sand, 'rho')
-                efficiency = _weighted(self._water, self._sand, 'efficiency')
+                cp = self._water.cp + self._sand.porosity * self._sand.cp
+                rho = (self._water.rho + self._sand.porosity * self._sand.rho) / 2.0
+                efficiency = self._sand.efficiency  # XXX 열저장효율 같은 값 입력
             case _:
                 raise ValueError(design.material)
 
@@ -151,12 +153,12 @@ class PavementTES:
         try:
             mass = heat / (cp * self._env.delta_temperature)
         except ZeroDivisionError:
-            mass = float('inf')
+            mass = math.inf
 
         try:
             volume = mass / rho
         except ZeroDivisionError:
-            volume = float('inf')
+            volume = math.inf
 
         capacity = volume * efficiency
 
@@ -165,7 +167,7 @@ class PavementTES:
             duration=design.duration,
             area=design.area,
             material=design.material,
-            heat=heat / 1000.0,  # kJ
+            heat=heat,
             tank_capacity_mass=mass,
             tank_capacity_volume=volume,
             capacity=capacity,

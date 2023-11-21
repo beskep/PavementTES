@@ -56,19 +56,20 @@ class Controller(QtCore.QObject):
                 raise ValueError(variable)
 
     def update_analysis(self):
-        page = self._winow.page('analysis')
+        cases = self._cases.cases
 
-        page.set_chart_bars(
-            json.dumps([f'{a.capacity:.4g}' for a in self._cases.cases])
-        )
+        page = self._winow.page('analysis')
+        page.set_chart_bars(json.dumps([f'{x.capacity:.4g}' for x in cases]))
         page.set_table(self._cases.model_dump_json())
+
+        logger.info('capacity={}', [x.capacity for x in cases])
 
     @QtCore.Slot(str)
     def set_design_variables(self, text: str):
         self._cases = self._pt.calculate_cases(text)
 
         for idx, case in enumerate(self._cases.cases):
-            logger.info('case{}={!r}', idx, case)
+            logger.info('case[{}]={!r}', idx, case)
 
         self.update_analysis()
 
