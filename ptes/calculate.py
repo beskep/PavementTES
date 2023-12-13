@@ -1,8 +1,9 @@
 import math
+from collections.abc import Iterable
 from typing import ClassVar, Literal
 
 from loguru import logger
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import BaseModel, Field, TypeAdapter, field_serializer
 
 positive = Field(gt=0.0)
 ratio = Field(ge=0.0, le=1.0)
@@ -45,26 +46,6 @@ class Capacity(Design):
     tank_capacity_volume: float  # m³
     capacity: float  # m³
 
-    @field_serializer(
-        'duration',
-        'area',
-        'heat',
-        'tank_capacity_mass',
-        'tank_capacity_volume',
-        'capacity',
-    )
-    @staticmethod
-    def _serialize_numeric(value):
-        return f'{value:g}'
-
-
-class DesignCases(BaseModel):
-    cases: list[Design]
-
-
-class CapacityCases(BaseModel):
-    cases: list[Capacity]
-
     COLUMNS: ClassVar[tuple[str, ...]] = (
         '집열 효율',
         '집열 기간 (일)',
@@ -81,6 +62,21 @@ class CapacityCases(BaseModel):
         'heat',
         'capacity',
     )
+
+    @field_serializer(
+        'duration',
+        'area',
+        'heat',
+        'tank_capacity_mass',
+        'tank_capacity_volume',
+        'capacity',
+    )
+    @staticmethod
+    def _serialize_numeric(value):
+        return f'{value:g}'
+
+
+CapacityCases = TypeAdapter(list[Capacity])
 
 
 class PavementTES:
@@ -150,6 +146,7 @@ class PavementTES:
             * design.duration
             * design.area
         )
+
         try:
             mass = heat / (cp * self._env.delta_temperature)
         except ZeroDivisionError:
@@ -173,11 +170,8 @@ class PavementTES:
             capacity=capacity,
         )
 
-    def calculate_cases(self, data: str | DesignCases):
-        cases = (
-            data
-            if isinstance(data, DesignCases)
-            else DesignCases.model_validate_json(data)
-        )
+    def calculate_cases(self, data: str | Iterable[Design]):
+        if isinstance(data, str):
+            cases = TypeAdapter(list[Design]).validate_json(data)
 
-        return CapacityCases(cases=[self.calculate(x) for x in cases.cases])
+        return tuple(self.calculate(case) for case in cases)

@@ -5,7 +5,7 @@ from loguru import logger
 from PySide6 import QtCore, QtGui
 
 from ptes import xlsx
-from ptes.calculate import CapacityCases, PavementTES
+from ptes.calculate import Capacity, CapacityCases, PavementTES
 
 
 class _Window:
@@ -28,7 +28,7 @@ class Controller(QtCore.QObject):
 
         self._winow = _Window(window)
         self._pt = PavementTES()
-        self._cases: CapacityCases
+        self._cases: tuple[Capacity, ...]
 
     @QtCore.Slot(str)
     def log(self, message: str):  # noqa: PLR6301
@@ -56,19 +56,16 @@ class Controller(QtCore.QObject):
                 raise ValueError(variable)
 
     def update_analysis(self):
-        cases = self._cases.cases
-
         page = self._winow.page('analysis')
-        page.set_chart_bars(json.dumps([f'{x.capacity:.4g}' for x in cases]))
-        page.set_table(self._cases.model_dump_json())
-
-        logger.info('capacity={}', [x.capacity for x in cases])
+        page.set_chart_bars(json.dumps([f'{x.capacity:.4g}' for x in self._cases]))
+        page.set_table(CapacityCases.dump_json(list(self._cases)).decode())
+        logger.info('capacity={}', [round(x.capacity, 3) for x in self._cases])
 
     @QtCore.Slot(str)
     def set_design_variables(self, text: str):
         self._cases = self._pt.calculate_cases(text)
 
-        for idx, case in enumerate(self._cases.cases):
+        for idx, case in enumerate(self._cases):
             logger.info('case[{}]={!r}', idx, case)
 
         self.update_analysis()

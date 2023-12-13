@@ -17,9 +17,7 @@ Pane {
     }
 
     function set_variables() {
-        let rows = {
-            "cases": table_model.rows.map(_row)
-        };
+        let rows = table_model.rows.map(_row);
         controller.set_design_variables(JSON.stringify(rows));
     }
 

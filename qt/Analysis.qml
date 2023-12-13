@@ -21,7 +21,7 @@ Pane {
     }
 
     function set_table(text) {
-        table_model.rows = JSON.parse(text)['cases'];
+        table_model.rows = JSON.parse(text);
     }
 
     ColumnLayout {

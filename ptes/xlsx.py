@@ -1,15 +1,16 @@
+from collections.abc import Collection
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 from xlsxwriter import Workbook
 
-from ptes.calculate import CapacityCases
+from ptes.calculate import Capacity
 
 if TYPE_CHECKING:
     from xlsxwriter.worksheet import Worksheet
 
 
-def write_values(path: str | Path, cases: CapacityCases, *, table=True):
+def write_values(path: str | Path, cases: Collection[Capacity], *, table=True):
     with Workbook(path) as wb:
         percent = wb.add_format({'num_format': '0.0%'})
         scientific = wb.add_format({'num_format': '0.000E+00'})
@@ -17,19 +18,19 @@ def write_values(path: str | Path, cases: CapacityCases, *, table=True):
         ws: Worksheet = wb.add_worksheet()
 
         # width
-        ws.set_column(first_col=1, last_col=len(cases.COLUMNS), width=15)
+        ws.set_column(first_col=1, last_col=len(Capacity.COLUMNS), width=15)
 
         # header
         ws.write(0, 0, '번호')
-        for col, name in enumerate(cases.COLUMNS):
+        for col, name in enumerate(Capacity.COLUMNS):
             ws.write(0, col + 1, name)
 
         # value
         args: tuple
-        for row, case in enumerate(cases.cases):
+        for row, case in enumerate(cases):
             ws.write(row + 1, 0, f'#{row+1}')  # 번호
 
-            for col, key in enumerate(cases.KEYS):
+            for col, key in enumerate(Capacity.KEYS):
                 value = getattr(case, key)
 
                 if key == 'efficiency':
@@ -46,20 +47,25 @@ def write_values(path: str | Path, cases: CapacityCases, *, table=True):
             ws.add_table(
                 first_row=0,
                 first_col=0,
-                last_row=len(cases.cases),
-                last_col=len(cases.COLUMNS),
+                last_row=len(cases),
+                last_col=len(Capacity.COLUMNS),
             )
 
 
-def write_table(path: str | Path, cases: CapacityCases, *, chart=True):
-    nrows = len(cases.cases)
-    ncols = len(cases.COLUMNS)
+def write_table(
+    path: str | Path,
+    cases: Collection[Capacity],
+    *,
+    chart=True,
+    sheet='Sheet1',
+):
+    nrows = len(cases)
+    ncols = len(Capacity.COLUMNS)
 
-    sheet = 'Sheet1'
-    columns = [{'header': x} for x in ['번호', *cases.COLUMNS]]
+    columns = [{'header': x} for x in ['번호', *Capacity.COLUMNS]]
     data = [
-        [f'#{idx+1}', *(getattr(case, key) for key in cases.KEYS)]
-        for idx, case in enumerate(cases.cases)
+        [f'#{idx+1}', *(getattr(case, key) for key in case.KEYS)]
+        for idx, case in enumerate(cases)
     ]
 
     with Workbook(path) as wb:
@@ -69,7 +75,7 @@ def write_table(path: str | Path, cases: CapacityCases, *, chart=True):
             for d in columns
         ]
 
-        ws: Worksheet = wb.add_worksheet()
+        ws: Worksheet = wb.add_worksheet(sheet)
 
         # width
         ws.set_column(first_col=1, last_col=ncols, width=18)
@@ -96,7 +102,7 @@ def write_table(path: str | Path, cases: CapacityCases, *, chart=True):
             _chart.set_legend({'none': True})
             _chart.set_title(
                 {
-                    'name': cases.COLUMNS[-1],
+                    'name': Capacity.COLUMNS[-1],
                     'name_font': {'size': 16},
                 }
             )
