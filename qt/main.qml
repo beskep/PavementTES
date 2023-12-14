@@ -24,7 +24,7 @@ ApplicationWindow {
     width: 1600
     height: 900
     visible: true
-    title: '도로 집열면적에 따른 계절간 축열량 및 축열조 용량 산정 프로그램'
+    title: 'HVAC'
 
     FontLoader {
         source: '../assets/SourceHanSansKR-Normal.otf'

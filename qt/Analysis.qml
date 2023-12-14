@@ -70,7 +70,7 @@ Pane {
                         labelsFont.family: 'Source Han Sans KR'
                         labelsFont.pointSize: 14
                         min: 0
-                        titleText: "저장 탱크 용량 (m³)"
+                        titleText: "냉난방 운전 시간"
                     }
 
                 }
@@ -90,7 +90,7 @@ Pane {
                 anchors.top: parent.top
                 syncView: table_view
                 clip: true
-                model: ['집열 효율', '집열 기간 (일)', '도로 면적 (m²)', '축열재', '축열량 (kJ)', '축열조 용량 (m³)']
+                model: ['냉난방 부하', '태양광 발전 용량', '배터리 용량', '전력 소비량', '에너지 자립률', '냉난방 운전 시간']
             }
 
             VerticalHeaderView {

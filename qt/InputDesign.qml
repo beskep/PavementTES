@@ -65,7 +65,7 @@ Pane {
                 anchors.top: parent.top
                 syncView: table_view
                 clip: true
-                model: ['집열 효율', '집열 기간 (일)', '도로 면적 (m²)', '축열재']
+                model: ['발전 효율', '인버터 효율', '컨트롤러 효율', '보정 방법']
             }
 
             VerticalHeaderView {
@@ -123,7 +123,7 @@ Pane {
 
                         delegate: ComboBox {
                             implicitWidth: column_width
-                            model: ['물', '모래', '물+모래']
+                            model: ['자동', '적용', '미적용']
                             currentIndex: display
                             onActiveFocusChanged: {
                                 display = currentIndex;

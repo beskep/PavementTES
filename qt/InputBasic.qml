@@ -79,7 +79,7 @@ Pane {
             GroupBox {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                title: '물성치'
+                title: '냉난방'
 
                 GridLayout {
                     anchors.left: parent.left
@@ -93,12 +93,12 @@ Pane {
                     }
 
                     Label {
-                        text: '물'
+                        text: '냉방'
                         font.bold: true
                     }
 
                     Label {
-                        text: '모래'
+                        text: '난방'
                         font.bold: true
                     }
 
@@ -107,7 +107,7 @@ Pane {
 
                     // 정압비열
                     Label {
-                        text: '정압비열 (Cp)'
+                        text: '냉난방면적'
                     }
 
                     TextFieldStatus {
@@ -133,12 +133,12 @@ Pane {
                     }
 
                     Label {
-                        text: 'kJ/kg℃'
+                        text: 'm²'
                     }
 
                     // 밀도
                     Label {
-                        text: '밀도 (ρ)'
+                        text: '단위냉난방부하'
                     }
 
                     TextFieldStatus {
@@ -164,12 +164,12 @@ Pane {
                     }
 
                     Label {
-                        text: 'kg/m³'
+                        text: 'W/m²'
                     }
 
                     // 공극률
                     Label {
-                        text: '공극률'
+                        text: '냉난방효율'
                     }
 
                     TextFieldStatus {
@@ -198,7 +198,7 @@ Pane {
 
                     // 열저장효율
                     Label {
-                        text: '열저장효율'
+                        text: '보정계수'
                     }
 
                     TextFieldStatus {

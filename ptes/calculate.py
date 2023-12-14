@@ -28,7 +28,7 @@ class Design(BaseModel):
     area: float = positive  # m²
     material: Literal[0, 1, 2]  # 물, 모래, 물+모래
 
-    MATERIALS: ClassVar[tuple[str, str, str]] = ('물', '모래', '물+모래')
+    MATERIALS: ClassVar[tuple[int, int, int]] = (10, 20, 42)
 
     @field_serializer('efficiency')
     @staticmethod

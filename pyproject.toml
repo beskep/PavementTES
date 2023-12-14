@@ -1,7 +1,7 @@
 [project]
-name = 'PavementTES'
-version = '0.1.1'
-description = '도로 집열면적에 따른 계절간 축열량 및 축열조 용량 산정 프로그램'
+name = 'HVAC'
+version = '0.0.1'
+description = '에너지 자립률 계산'
 requires-python = '>=3.11'
 
 [tool.ruff]
