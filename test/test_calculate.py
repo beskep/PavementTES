@@ -74,19 +74,20 @@ def test_random_calculation(water, sand, env, design):
 )
 def test_water(efficiency, duration, area, capacity):
     pt = cal.PavementTES()
-    pt.water = pt.water.model_validate(
-        {'cp': 4.2, 'rho': 1000, 'porosity': 0.5, 'efficiency': 0.5}
-    )
+    pt.water = pt.water.model_validate({
+        'cp': 4.2,
+        'rho': 1000,
+        'porosity': 0.5,
+        'efficiency': 0.5,
+    })
     pt.env = pt.env.model_validate({'delta_temperature': 30, 'daily_radiation': 4.3})
 
-    a = pt.calculate(
-        {
-            'efficiency': efficiency / 100.0,
-            'duration': duration,
-            'area': area,
-            'material': 0,
-        }
-    )
+    a = pt.calculate({
+        'efficiency': efficiency / 100.0,
+        'duration': duration,
+        'area': area,
+        'material': 0,
+    })
 
     assert a.capacity == pytest.approx(capacity)
 
@@ -107,19 +108,20 @@ def test_water(efficiency, duration, area, capacity):
 )
 def test_sand(efficiency, duration, area, capacity):
     pt = cal.PavementTES()
-    pt.sand = pt.sand.model_validate(
-        {'cp': 0.9, 'rho': 2000, 'porosity': 0.5, 'efficiency': 0.5}
-    )
+    pt.sand = pt.sand.model_validate({
+        'cp': 0.9,
+        'rho': 2000,
+        'porosity': 0.5,
+        'efficiency': 0.5,
+    })
     pt.env = pt.env.model_validate({'delta_temperature': 30, 'daily_radiation': 4.3})
 
-    a = pt.calculate(
-        {
-            'efficiency': efficiency / 100.0,
-            'duration': duration,
-            'area': area,
-            'material': 1,
-        }
-    )
+    a = pt.calculate({
+        'efficiency': efficiency / 100.0,
+        'duration': duration,
+        'area': area,
+        'material': 1,
+    })
 
     assert a.capacity == pytest.approx(capacity)
 
@@ -140,21 +142,25 @@ def test_sand(efficiency, duration, area, capacity):
 )
 def test_water_and_sand(efficiency, duration, area, capacity):
     pt = cal.PavementTES()
-    pt.water = pt.water.model_validate(
-        {'cp': 4.2, 'rho': 1000, 'porosity': 0.5, 'efficiency': 0.5}
-    )
-    pt.sand = pt.sand.model_validate(
-        {'cp': 0.9, 'rho': 2000, 'porosity': 0.5, 'efficiency': 0.5}
-    )
+    pt.water = pt.water.model_validate({
+        'cp': 4.2,
+        'rho': 1000,
+        'porosity': 0.5,
+        'efficiency': 0.5,
+    })
+    pt.sand = pt.sand.model_validate({
+        'cp': 0.9,
+        'rho': 2000,
+        'porosity': 0.5,
+        'efficiency': 0.5,
+    })
     pt.env = pt.env.model_validate({'delta_temperature': 30, 'daily_radiation': 4.3})
 
-    a = pt.calculate(
-        {
-            'efficiency': efficiency / 100.0,
-            'duration': duration,
-            'area': area,
-            'material': 2,
-        }
-    )
+    a = pt.calculate({
+        'efficiency': efficiency / 100.0,
+        'duration': duration,
+        'area': area,
+        'material': 2,
+    })
 
     assert a.capacity == pytest.approx(capacity)

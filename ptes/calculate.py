@@ -171,7 +171,9 @@ class PavementTES:
         )
 
     def calculate_cases(self, data: str | Iterable[Design]):
-        if isinstance(data, str):
+        if not isinstance(data, str):
+            cases = data
+        else:
             cases = TypeAdapter(list[Design]).validate_json(data)
 
         return tuple(self.calculate(case) for case in cases)

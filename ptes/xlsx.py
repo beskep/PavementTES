@@ -93,17 +93,13 @@ def write_table(
         if chart:
             _chart = wb.add_chart({'type': 'column'})
             # value 형식: [sheetname, first_row, first_col, last_row, last_col]
-            _chart.add_series(
-                {
-                    'category': [sheet, 1, 0, nrows, 0],
-                    'values': [sheet, 1, ncols, nrows, ncols],
-                }
-            )
+            _chart.add_series({
+                'category': [sheet, 1, 0, nrows, 0],
+                'values': [sheet, 1, ncols, nrows, ncols],
+            })
             _chart.set_legend({'none': True})
-            _chart.set_title(
-                {
-                    'name': Capacity.COLUMNS[-1],
-                    'name_font': {'size': 16},
-                }
-            )
+            _chart.set_title({
+                'name': Capacity.COLUMNS[-1],
+                'name_font': {'size': 16},
+            })
             ws.insert_chart(row=0, col=ncols + 2, chart=_chart)
