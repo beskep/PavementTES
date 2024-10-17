@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 from typing import Literal
 
@@ -31,7 +33,7 @@ class Controller(QtCore.QObject):
         self._cases: tuple[Capacity, ...]
 
     @QtCore.Slot(str)
-    def log(self, message: str):  # noqa: PLR6301
+    def log(self, message: str):
         if (find := message.find('|')) == -1:
             level = 'DEBUG'
         else:

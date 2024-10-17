@@ -1,18 +1,17 @@
+from __future__ import annotations
+
 import json
+import tomllib
 from itertools import chain
 from pathlib import Path
-
-import tomli
 
 EXCLUDE = {'dist', 'build'}
 EXTS = {'.py', '.qml'}
 
 if __name__ == '__main__':
     root = Path(__file__).parents[1]
-    with (root / 'pyproject.toml').open('rb') as rf:
-        pyproject = tomli.load(rf)
-
-    project = pyproject['project']['name']
+    pyproject = Path(__file__).parents[1] / 'pyproject.toml'
+    project = tomllib.loads(pyproject.read_text('UTF-8'))['project']['name']
 
     paths = chain.from_iterable((f for f in root.rglob(f'*{e}')) for e in EXTS)
     texts = sorted(

@@ -1,39 +1,77 @@
 [project]
-name = 'PavementTES'
-version = '0.1.2'
-description = '도로 집열면적에 따른 계절간 축열량 및 축열조 용량 산정 프로그램'
-requires-python = '>=3.11'
-
-[tool.ruff]
-preview = true
-select = ['ALL']
-ignore = [
-    'ANN',
-    'COM',
-    'CPY',
-    'D',
-    'E1',
-    'E2',
-    'FIX',
-    'INP',
-    'ISC001',
-    'PD010',
-    'PD901',
-    'PTH123',
-    'Q',
-    'S101',
-    'T20',
-    'TD',
+name = "PavementTES"
+version = "0.1.2"
+description = "도로 집열면적에 따른 계절간 축열량 및 축열조 용량 산정 프로그램"
+authors = [{ name = "beskep", email = "beskep@naver.com" }]
+dependencies = [
+    "pydantic>=2.9.2",
+    "xlsxwriter>=3.2.0",
+    "pyside6>=6.8.0.1",
+    "cx-freeze>=7.2.3",
+    "rich>=13.9.2",
+    "loguru>=0.7.2",
 ]
-ignore-init-module-imports = true
-unfixable = ['ERA']
+readme = "README.md"
+requires-python = ">= 3.12"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "ruff>=0.6.9",
+    "pylint>=3.3.1",
+    "mypy>=1.12.0",
+    "pytest>=8.3.3",
+    "pytest-sugar>=1.0.0",
+    "hypothesis>=6.115.3",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["ptes"]
 
 [tool.ruff.format]
-preview = true
-quote-style = 'single'
+quote-style = "single"
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "ANN",    # flake8-annotations
+    "COM",    # flake8-commas
+    "CPY",    # flake8-copyright
+    "D",      # pydocstyle
+    "E1",     # pycodestyle: E1*
+    "E2",     # pycodestyle: E2*
+    "FIX",    # flake8-fixme
+    "INP",    # flake8-no-pep420
+    "ISC001", # flake8-implicit-str-concat: single-line-implicit-string-concatenation
+    "Q",      # flake8-quotes
+    "S",      # flake8-bandit
+    "T20",    # flake8-print
+    "TD",     # flake8-todos
+]
+extend-safe-fixes = [
+    "TCH", # flake8-type-checking
+    "EM",  # flake8-errmsg
+]
+
+[tool.ruff.lint.isort]
+required-imports = ["from __future__ import annotations"]
+
+[tool.pylint.messages_control]
+confidence = ["HIGH", "CONTROL_FLOW", "INFERENCE", "INFERENCE_FAILURE"]
+enable = ["bad-inline-option", "useless-suppression"]
+disable = ["R", "C", "fixme", "no-member", "c-extension-no-member"]
 
 [tool.mypy]
-disable_error_code = ['var-annotated', 'import']
+plugins = ["pydantic.mypy"]
+disable_error_code = ["import", "import-untyped"]
 check_untyped_defs = true
 warn_unused_ignores = true
 warn_unused_configs = true

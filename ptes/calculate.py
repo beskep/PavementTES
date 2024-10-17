@@ -1,9 +1,13 @@
+from __future__ import annotations
+
 import math
-from collections.abc import Iterable
-from typing import ClassVar, Literal
+from typing import TYPE_CHECKING, ClassVar, Literal
 
 from loguru import logger
 from pydantic import BaseModel, Field, TypeAdapter, field_serializer
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 positive = Field(gt=0.0)
 ratio = Field(ge=0.0, le=1.0)

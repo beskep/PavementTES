@@ -1,14 +1,16 @@
+from __future__ import annotations
+
 import sysconfig
+import tomllib
 from pathlib import Path
 
-import tomli
 from cx_Freeze import Executable, setup
 
 if __name__ == '__main__':
     root = Path(__file__).parents[1]
 
     si = (sysconfig.get_platform(), sysconfig.get_python_version())
-    pyprj = tomli.loads((root / 'pyproject.toml').read_text('UTF-8'))
+    pyprj = tomllib.loads((root / 'pyproject.toml').read_text('UTF-8'))
     name = pyprj['project']['name']
     version = pyprj['project']['version']
 

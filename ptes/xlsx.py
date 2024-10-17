@@ -1,5 +1,5 @@
-from collections.abc import Collection
-from pathlib import Path
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from xlsxwriter import Workbook
@@ -7,6 +7,9 @@ from xlsxwriter import Workbook
 from ptes.calculate import Capacity
 
 if TYPE_CHECKING:
+    from collections.abc import Collection
+    from pathlib import Path
+
     from xlsxwriter.worksheet import Worksheet
 
 
